@@ -13,3 +13,6 @@ app.listen(PORT, async () => {
     await connectDB();
     console.log(`Server is running on port ${PORT}`);
 });
+
+PORT=8000
+MONGODB_URL=mongodb+srv://helpinfinitedev_db_user:yvadB3DlSdwxJvnk@cluster0.p6p1pec.mongodb.net/?appName=Cluster0
