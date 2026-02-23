@@ -10,7 +10,7 @@ const connectDB = async (): Promise<void> => {
         console.log("db connected");
     } catch (error) {
         console.error("db error:", error);
-        process.exit(1);
+        throw error;
     }
 };
 

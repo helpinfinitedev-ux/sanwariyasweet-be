@@ -1,6 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import dotenv from "dotenv";
-import connectDB from "./config/db.js";
+import connectDB from "./config/db";
 import productRouter from "./routes/product.routes";
 import categoryRouter from "./routes/category.routes";
 import authRouter from "./routes/auth.routes";

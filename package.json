@@ -4,7 +4,6 @@
   "description": "",
   "license": "ISC",
   "author": "Help infinite",
-  "type": "module",
   "main": "dist/index.js",
   "scripts": {
     "dev": "tsx watch server.ts",
