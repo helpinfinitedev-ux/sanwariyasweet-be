@@ -1,0 +1,93 @@
+# Backend Project-Wide Engineering Guidelines
+
+_For AI Agents Working on This Codebase (Node.js + Express-style routing + Mongoose)_
+
+---
+
+## 1. Core Principles
+
+1. **Consistency > Creativity**
+
+   - Follow existing patterns in the repo (folder structure, error handling, response helpers, naming conventions).
+   - Do not introduce new frameworks/patterns unless explicitly instructed.
+
+2. **Separation of Concerns (Non-negotiable)**
+
+   - **Routes**: URL mapping only (no logic).
+   - **Controllers**: request validation + orchestration + business logic (thin).
+   - **Services**: DB access + persistence + queries (fat).
+   - **Models**: schema definitions + hooks + indexes + virtuals.
+
+3. **Predictable API Contracts**
+
+   - Every endpoint must respond with:
+     - `{ message: string, result: object }`
+   - Errors must follow the same general shape (see error rules).
+
+4. **Data Integrity**
+   - Model relationships must be represented and enforced as much as possible in Mongoose:
+     - Required refs where needed
+     - Indexes for foreign keys
+     - Validation rules
+     - Transaction usage when multiple writes must succeed together
+
+---
+
+## 2. REST API Naming Conventions
+
+### 2.1 Resource Naming
+
+- Use **plural nouns** for collections:
+  - `/products`, `/categories`, `/orders`, `/users`
+- Use IDs for specific resources:
+  - `/products/:productId`
+- Use nested routes for strongly-owned relationships:
+  - `/categories/:categoryId/products` (only if category owns the listing context)
+- Do not use verbs in routes:
+  - Bad: `/getProducts`, `/createProduct`
+  - Good: `/products`
+
+### 2.2 HTTP Method Semantics
+
+- `GET /resources` → list
+- `GET /resources/:id` → read
+- `POST /resources` → create
+- `PUT /resources/:id` → replace (full update)
+- `PATCH /resources/:id` → partial update
+- `DELETE /resources/:id` → delete
+
+### 2.3 Filtering, Sorting, Pagination (Query Params)
+
+Standard query params:
+
+- `page`, `limit`
+- `sort` (e.g. `sort=createdAt:desc`)
+- filter fields directly:
+
+  - `/products?categoryId=<id>&isActive=true`
+
+- Also please make sure the payload for update or create or anything matches the schema of the entity (names, attribute).
+
+e.g. for product, the payload should be:
+
+```typescript
+{ name: string; description: string; images: string[]; price: number; category: string; }
+```
+
+since the schema of the product is:
+
+```typescript
+{ name: string; description: string; images: string[]; price: number; category: string; }
+```
+
+- When returning products make sure to do a .populate() for the foreign key references. For example populate the cateogry when return the product or populate the user when returning the order and so on.
+
+Never:
+
+- Put filters in route path unless it represents hierarchy/ownership.
+
+---
+
+## 3. Folder Structure (Routes/Controllers/Services Segregated)
+
+Use this structure (or adapt to existing repo convention):

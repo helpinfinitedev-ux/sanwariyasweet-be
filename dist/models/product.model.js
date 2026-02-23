@@ -33,52 +33,46 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.productSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
+exports.productSchema = new mongoose_1.Schema({
+    name: {
         type: String,
         required: true,
         trim: true,
     },
-    lastName: {
+    description: {
         type: String,
-        required: true,
         trim: true,
     },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
+    images: {
+        type: [String],
         trim: true,
-        unique: true,
-        sparse: true // Since it's unique and can be null/unset
-    },
-    password: {
-        type: String,
         required: true,
+        min: 1,
+        default: [],
+        validate: {
+            validator: function (v) {
+                return v.length > 0;
+            },
+            message: "At least one image is required",
+        },
     },
-    lastPurchaseDate: {
+    price: {
         type: Number,
-        default: null,
+        required: true,
+        min: 0,
     },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
-        type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
+    category: {
+        type: mongoose_1.Schema.Types.ObjectId,
+        ref: "Category",
+        required: true,
     },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+exports.productSchema.index({ category: 1 });
+exports.productSchema.pre(/^find/, function () {
+    const query = this;
+    query.populate({ path: "category" });
+});
+const Product = mongoose_1.default.model("Product", exports.productSchema);
+exports.default = Product;

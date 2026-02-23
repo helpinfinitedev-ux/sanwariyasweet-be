@@ -33,52 +33,63 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.cartSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    phoneNumber: {
-        type: String,
+exports.cartSchema = new mongoose_1.Schema({
+    userId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
         required: true,
         unique: true,
     },
-    address: {
-        type: String,
+    items: {
+        type: [
+            {
+                productId: {
+                    type: mongoose_1.default.Types.ObjectId,
+                    ref: "Product",
+                    required: true,
+                },
+                quantity: {
+                    type: Number,
+                    required: true,
+                    min: 1,
+                    max: 10,
+                    default: 1,
+                },
+                price: {
+                    type: Number,
+                    required: true,
+                    min: 0,
+                    default: 0,
+                },
+                unit: {
+                    type: String,
+                    required: true,
+                    enum: ["kg", "g", "pcs"],
+                    default: "kg",
+                },
+            },
+        ],
         required: true,
-    },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
-        trim: true,
-        unique: true,
-        sparse: true // Since it's unique and can be null/unset
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    lastPurchaseDate: {
-        type: Number,
-        default: null,
-    },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
-        type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
+        min: 1,
+        max: 10,
+        default: [],
+        validate: {
+            validator: function (v) {
+                return v.length > 0;
+            },
+            message: "At least one item is required",
+        },
     },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+exports.cartSchema.pre(/^find/, function () {
+    const query = this;
+    query.populate({ path: "userId" });
+    query.populate({
+        path: "items.productId",
+        populate: { path: "category" },
+    });
+});
+const Cart = mongoose_1.default.model("Cart", exports.cartSchema);
+exports.default = Cart;

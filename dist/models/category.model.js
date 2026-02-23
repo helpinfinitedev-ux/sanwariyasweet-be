@@ -33,52 +33,22 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.categorySchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
+exports.categorySchema = new mongoose_1.Schema({
+    name: {
         type: String,
         required: true,
         trim: true,
     },
-    lastName: {
+    description: {
         type: String,
-        required: true,
         trim: true,
     },
-    phoneNumber: {
+    image: {
         type: String,
-        required: true,
-        unique: true,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
         trim: true,
-        unique: true,
-        sparse: true // Since it's unique and can be null/unset
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    lastPurchaseDate: {
-        type: Number,
-        default: null,
-    },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
-        type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
     },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+const Category = mongoose_1.default.model("Category", exports.categorySchema);
+exports.default = Category;

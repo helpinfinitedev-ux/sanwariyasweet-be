@@ -33,52 +33,79 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
-        type: String,
+exports.orderSchema = new mongoose_1.Schema({
+    userId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
         required: true,
-        trim: true,
     },
-    lastName: {
-        type: String,
+    items: {
+        type: [
+            {
+                productId: {
+                    type: mongoose_1.default.Types.ObjectId,
+                    ref: "Product",
+                    required: true,
+                },
+                quantity: {
+                    type: Number,
+                    required: true,
+                    min: 1,
+                    max: 10,
+                    default: 1,
+                },
+                price: {
+                    type: Number,
+                    required: true,
+                    min: 0,
+                    default: 0,
+                },
+                unit: {
+                    type: String,
+                    required: true,
+                    enum: ["kg", "g", "pcs"],
+                    default: "kg",
+                },
+            },
+        ],
         required: true,
-        trim: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true,
+        min: 1,
+        max: 10,
+        default: [],
+        validate: {
+            validator: function (v) {
+                return v.length > 0;
+            },
+            message: "At least one item is required",
+        },
     },
     address: {
         type: String,
         required: true,
     },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
-        trim: true,
-        unique: true,
-        sparse: true // Since it's unique and can be null/unset
-    },
-    password: {
+    phoneNumber: {
         type: String,
         required: true,
     },
-    lastPurchaseDate: {
-        type: Number,
-        default: null,
+    expectedDeliveryDate: {
+        type: Date,
+        required: true,
     },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
+    status: {
         type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
+        enum: ["pending", "shipped", "in-transit", "delivered"],
+        default: "pending",
     },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+exports.orderSchema.pre(/^find/, function () {
+    const query = this;
+    query.populate({ path: "userId" });
+    query.populate({
+        path: "items.productId",
+        populate: { path: "category" },
+    });
+});
+const Order = mongoose_1.default.model("Order", exports.orderSchema);
+exports.default = Order;
