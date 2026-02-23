@@ -4,6 +4,9 @@ import connectDB from "./config/db";
 import productRouter from "./routes/product.routes";
 import categoryRouter from "./routes/category.routes";
 import authRouter from "./routes/auth.routes";
+import cartRouter from "./routes/cart.routes";
+import orderRouter from "./routes/order.routes";
+import adminRouter from "./routes/admin.routes";
 
 dotenv.config();
 
@@ -14,6 +17,9 @@ app.use(express.json());
 app.use("/products", productRouter);
 app.use("/categories", categoryRouter);
 app.use("/auth", authRouter);
+app.use("/carts", cartRouter);
+app.use("/orders", orderRouter);
+app.use("/admin", adminRouter);
 
 app.get("/", (req: Request, res: Response) => {
   res.json({

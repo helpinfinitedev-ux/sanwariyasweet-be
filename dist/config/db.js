@@ -15,7 +15,7 @@ const connectDB = async () => {
     }
     catch (error) {
         console.error("db error:", error);
-        process.exit(1);
+        throw error;
     }
 };
 exports.default = connectDB;

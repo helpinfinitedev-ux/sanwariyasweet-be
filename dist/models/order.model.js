@@ -93,6 +93,12 @@ exports.orderSchema = new mongoose_1.Schema({
         type: Date,
         required: true,
     },
+    totalAmount: {
+        type: Number,
+        required: true,
+        min: 0,
+        default: 0,
+    },
     status: {
         type: String,
         enum: ["pending", "shipped", "in-transit", "delivered"],

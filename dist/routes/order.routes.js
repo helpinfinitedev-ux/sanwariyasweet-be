@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const order_controllers_1 = require("../controllers/order.controllers");
+const orderRouter = (0, express_1.Router)();
+orderRouter.get("/", order_controllers_1.listOrders);
+orderRouter.get("/:orderId", order_controllers_1.getOrderById);
+orderRouter.post("/", order_controllers_1.createOrder);
+orderRouter.put("/:orderId", order_controllers_1.replaceOrder);
+orderRouter.patch("/:orderId", order_controllers_1.updateOrder);
+orderRouter.delete("/:orderId", order_controllers_1.deleteOrder);
+exports.default = orderRouter;
