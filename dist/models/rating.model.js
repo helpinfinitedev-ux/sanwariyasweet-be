@@ -33,57 +33,38 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ratingSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    address: {
-        type: String,
+exports.ratingSchema = new mongoose_1.Schema({
+    userId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "User",
         required: true,
     },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
-        trim: true,
-        unique: true,
-        sparse: true, // Since it's unique and can be null/unset
-    },
-    password: {
-        type: String,
+    productId: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: "Product",
         required: true,
     },
-    lastPurchaseDate: {
+    rating: {
         type: Number,
-        default: null,
+        required: true,
+        min: 1,
+        max: 5,
     },
-    orders: {
-        type: [mongoose_1.default.Types.ObjectId],
-        ref: "Order",
-        default: [],
-    },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
+    comment: {
         type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
+        required: false,
+        default: null,
     },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+exports.ratingSchema.pre(/^find/, function () {
+    const query = this;
+    query.populate({ path: "userId" });
+    query.populate({
+        path: "productId",
+        populate: { path: "category" },
+    });
+});
+const Rating = mongoose_1.default.model("Rating", exports.ratingSchema);
+exports.default = Rating;

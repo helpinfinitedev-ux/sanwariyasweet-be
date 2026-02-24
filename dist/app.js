@@ -11,9 +11,16 @@ const auth_routes_1 = __importDefault(require("./routes/auth.routes"));
 const cart_routes_1 = __importDefault(require("./routes/cart.routes"));
 const order_routes_1 = __importDefault(require("./routes/order.routes"));
 const admin_routes_1 = __importDefault(require("./routes/admin.routes"));
+const rating_routes_1 = __importDefault(require("./routes/rating.routes"));
+const testimonial_routes_1 = __importDefault(require("./routes/testimonial.routes"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5000;
+app.use((0, cors_1.default)({
+    origin: "*",
+    credentials: true,
+}));
 app.use(express_1.default.json());
 app.use("/products", product_routes_1.default);
 app.use("/categories", category_routes_1.default);
@@ -21,6 +28,8 @@ app.use("/auth", auth_routes_1.default);
 app.use("/carts", cart_routes_1.default);
 app.use("/orders", order_routes_1.default);
 app.use("/admin", admin_routes_1.default);
+app.use("/ratings", rating_routes_1.default);
+app.use("/testimonials", testimonial_routes_1.default);
 app.get("/", (req, res) => {
     res.json({
         request: req.url,

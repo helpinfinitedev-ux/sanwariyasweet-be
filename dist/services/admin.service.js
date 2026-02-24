@@ -31,19 +31,30 @@ exports.AdminService = {
     async listAllOrders(query) {
         const { page, limit, sort } = query;
         const skip = (page - 1) * limit;
-        const result = await paginate(order_model_1.default.find({}).sort(parseSort(sort, ["createdAt", "updatedAt", "expectedDeliveryDate"])).skip(skip).limit(limit), order_model_1.default.countDocuments({}), page, limit);
+        const result = await paginate(order_model_1.default.find({})
+            .sort(parseSort(sort, ["createdAt", "updatedAt", "expectedDeliveryDate"]))
+            .skip(skip)
+            .limit(limit), order_model_1.default.countDocuments({}), page, limit);
         return { orders: result.data, pagination: result.pagination };
     },
     async listAllProducts(query) {
         const { page, limit, sort } = query;
         const skip = (page - 1) * limit;
-        const result = await paginate(product_model_1.default.find({}).sort(parseSort(sort, ["createdAt", "updatedAt", "name", "price"])).skip(skip).limit(limit), product_model_1.default.countDocuments({}), page, limit);
+        const result = await paginate(product_model_1.default.find({})
+            .sort(parseSort(sort, ["createdAt", "updatedAt", "name", "price"]))
+            .skip(skip)
+            .limit(limit), product_model_1.default.countDocuments({}), page, limit);
         return { products: result.data, pagination: result.pagination };
     },
     async listAllUsers(query) {
         const { page, limit, sort } = query;
         const skip = (page - 1) * limit;
-        const result = await paginate(user_model_1.default.find({}).select("-password").sort(parseSort(sort, ["createdAt", "updatedAt", "firstName", "phoneNumber"])).skip(skip).limit(limit), user_model_1.default.countDocuments({}), page, limit);
+        const result = await paginate(user_model_1.default.find({})
+            .select("-password")
+            .sort(parseSort(sort, ["createdAt", "updatedAt", "firstName", "phoneNumber", "orders"]))
+            .populate("orders")
+            .skip(skip)
+            .limit(limit), user_model_1.default.countDocuments({}), page, limit);
         return { users: result.data, pagination: result.pagination };
     },
 };

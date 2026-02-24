@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const rating_controllers_1 = require("../controllers/rating.controllers");
+const ratingRouter = (0, express_1.Router)();
+ratingRouter.get("/", rating_controllers_1.listRatings);
+ratingRouter.get("/:ratingId", rating_controllers_1.getRatingById);
+ratingRouter.post("/", rating_controllers_1.createRating);
+ratingRouter.put("/:ratingId", rating_controllers_1.replaceRating);
+ratingRouter.patch("/:ratingId", rating_controllers_1.updateRating);
+ratingRouter.delete("/:ratingId", rating_controllers_1.deleteRating);
+exports.default = ratingRouter;

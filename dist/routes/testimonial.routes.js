@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const testimonial_controllers_1 = require("../controllers/testimonial.controllers");
+const testimonialRouter = (0, express_1.Router)();
+testimonialRouter.get("/", testimonial_controllers_1.listTestimonials);
+testimonialRouter.get("/:testimonialId", testimonial_controllers_1.getTestimonialById);
+testimonialRouter.post("/", testimonial_controllers_1.createTestimonial);
+testimonialRouter.put("/:testimonialId", testimonial_controllers_1.replaceTestimonial);
+testimonialRouter.patch("/:testimonialId", testimonial_controllers_1.updateTestimonial);
+testimonialRouter.delete("/:testimonialId", testimonial_controllers_1.deleteTestimonial);
+exports.default = testimonialRouter;

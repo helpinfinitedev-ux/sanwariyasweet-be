@@ -33,57 +33,24 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.testimonialSchema = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    lastName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-    phoneNumber: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    address: {
-        type: String,
-        required: true,
-    },
-    emailAddress: {
-        type: String,
-        default: null,
-        lowercase: true,
-        trim: true,
-        unique: true,
-        sparse: true, // Since it's unique and can be null/unset
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    lastPurchaseDate: {
+exports.testimonialSchema = new mongoose_1.Schema({
+    rating: {
         type: Number,
-        default: null,
+        required: true,
+        min: 1,
+        max: 5,
     },
-    orders: {
-        type: [mongoose_1.default.Types.ObjectId],
-        ref: "Order",
+    comment: {
+        type: String,
+        required: true,
+    },
+    images: {
+        type: [String],
+        required: false,
         default: [],
     },
-    totalPurchaseAmount: {
-        type: Number,
-        default: 0,
-    },
-    role: {
-        type: String,
-        enum: ["admin", "customer", "deliveryPartner"],
-        default: "customer",
-    },
 }, { timestamps: true });
-const User = mongoose_1.default.model("User", userSchema);
-exports.default = User;
+const Testimonial = mongoose_1.default.model("Testimonial", exports.testimonialSchema);
+exports.default = Testimonial;
